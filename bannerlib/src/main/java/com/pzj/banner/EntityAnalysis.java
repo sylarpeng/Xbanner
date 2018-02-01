@@ -8,7 +8,6 @@ import java.util.HashMap;
  * analysis
  * 重复注解无用
  *
- * @author tp
  * @create 2017-11-28 9:59
  **/
 public class EntityAnalysis<T>  {
