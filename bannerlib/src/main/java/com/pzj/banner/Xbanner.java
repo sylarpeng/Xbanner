@@ -224,6 +224,9 @@ public class Xbanner<T extends Object> extends RelativeLayout {
 
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
+				if(mDatas==null || mDatas.size()==0){
+					return false;
+				}
 				switch (event.getAction()) {
 					case MotionEvent.ACTION_DOWN:
 						currentPosition = mViewPager.getCurrentItem() % mDatas.size();
