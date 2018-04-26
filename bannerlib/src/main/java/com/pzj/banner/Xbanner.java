@@ -355,4 +355,10 @@ public class Xbanner<T extends Object> extends RelativeLayout {
 		super.onAttachedToWindow();
 
 	}
+
+	public void notifyDataSetChanged(){
+		if(mAdapter!=null){
+			mAdapter.notifyDataSetChanged();
+		}
+	}
 }
