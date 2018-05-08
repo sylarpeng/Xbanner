@@ -158,15 +158,12 @@ public class Xbanner<T extends Object> extends RelativeLayout {
 		mTvIndicator.setGravity(Gravity.CENTER_VERTICAL);
 		if(mDatas !=null && mDatas.size()>0){
 			setCurrentPage(0);
-			mTvIndicator.setVisibility(VISIBLE);
-		}else{
-			mTvIndicator.setVisibility(GONE);
 		}
 		mTvIndicator.setBackgroundResource(R.drawable.common_banner_digital);
 		((GradientDrawable)mTvIndicator.getBackground()).setColor(mContext.getResources().getColor(mConfig.getmIndicatorDigitalBgColor()));
 		this.addView(mTvIndicator,params);
 
-
+		mTvIndicator.setVisibility(mDatas !=null && mDatas.size()>1?VISIBLE:View.GONE);
 	}
 
 	private void setCurrentPage(int currentPosition){
