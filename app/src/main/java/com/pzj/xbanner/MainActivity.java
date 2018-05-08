@@ -118,5 +118,6 @@ public class MainActivity extends AppCompatActivity {
 		xbanner.init(datas,TestEntity.class,config);
 
 
+
 	}
 }

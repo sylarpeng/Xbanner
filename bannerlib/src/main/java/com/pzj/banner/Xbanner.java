@@ -312,7 +312,7 @@ public class Xbanner<T extends Object> extends RelativeLayout {
 				}
 
 				if(mChangeListener!=null){
-					mChangeListener.onBannerPageChange(arg0);
+					mChangeListener.onBannerPageChange(position);
 				}
 
 
