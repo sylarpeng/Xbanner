@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="bannerindicatorbgcolor">#3B000000</color>
+    <color name="bannerindicatorbgcolor">#00000000</color>
     <color name="white">#ff0000</color>
     <color name="indictor_normal">#eeeeee</color>
     <color name="indictor_selected">#ff0000</color>
+    <color name="indictor_digital_bg">#8C000000</color>
 
 </resources>

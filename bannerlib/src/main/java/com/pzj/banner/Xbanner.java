@@ -39,6 +39,7 @@ public class Xbanner<T extends Object> extends RelativeLayout {
 	private LinearLayout mPointContainer;
 
 	private TextView mTvDescription;
+	private TextView mTvIndicator;
 	private MyPagerAdapter mAdapter;
 	private int currentPosition;
 	private OnBannerClickListener mClickListener;
@@ -103,7 +104,12 @@ public class Xbanner<T extends Object> extends RelativeLayout {
 
 		//设置指示点
 		if(mConfig.isShowIndicator()){
-			addDian(mDatas);
+			if(mConfig.getmIndicatorType()== ConfigBuilder.IndicatorType.POINTS){
+				addDian(mDatas);
+			}else{
+				addDigitalIndicator();
+			}
+
 		}
 
 		//设置文字
@@ -117,7 +123,6 @@ public class Xbanner<T extends Object> extends RelativeLayout {
 
 	private void addTitle(){
 		mTvDescription=new TextView(mContext);
-
 		LayoutParams params = new LayoutParams(LayoutParams.WRAP_CONTENT, mConfig.getIndicatorBgHeight());
 		params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
 		params.setMargins(30, 0, 30, 0);
@@ -130,10 +135,37 @@ public class Xbanner<T extends Object> extends RelativeLayout {
 			String title = (String) entityAys.getValue(mDatas.get(0),Title.class);
 			mTvDescription.setText(title);
 		}
-
 		mIndicatorContainer.addView(mTvDescription,params);
+	}
 
+	private void addDigitalIndicator(){
+		mTvIndicator=new TextView(mContext);
+		LayoutParams params = new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
+		params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+		if(mConfig.getIndicatorGravity()== ConfigBuilder.IndicatorGravity.LEFT){
+			params.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+		}else if(mConfig.getIndicatorGravity()== ConfigBuilder.IndicatorGravity.RIGHT){
+			params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+		}else{
+			params.addRule(RelativeLayout.CENTER_HORIZONTAL, RelativeLayout.TRUE);
+		}
+		params.setMargins(30, 0, 30, 30);
+		mTvIndicator.setTextColor(mContext.getResources().getColor(mConfig.getTextColor()));
+		mTvIndicator.setTextSize(TypedValue.COMPLEX_UNIT_SP, mConfig.getTextSize());
+		mTvIndicator.setPadding(24,5,24,5);
+		mTvIndicator.setLines(1);
+		mTvIndicator.setEllipsize(TextUtils.TruncateAt.END);
+		mTvIndicator.setGravity(Gravity.CENTER_VERTICAL);
+		if(mDatas !=null && mDatas.size()>0){
+			setCurrentPage(0);
+		}
+		mTvIndicator.setBackgroundResource(R.drawable.common_banner_digital);
+		((GradientDrawable)mTvIndicator.getBackground()).setColor(mContext.getResources().getColor(mConfig.getmIndicatorDigitalBgColor()));
+		this.addView(mTvIndicator,params);
+	}
 
+	private void setCurrentPage(int currentPosition){
+		mTvIndicator.setText(currentPosition+1+"/"+mDatas.size());
 	}
 
 	private void addDian(List<T> images){
@@ -258,22 +290,30 @@ public class Xbanner<T extends Object> extends RelativeLayout {
 		mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 			@Override
 			public void onPageSelected(int arg0) {
+				int position = arg0 % mDatas.size();
 				if(mConfig.isShowIndicator()){
-					for (int i = 0; i < mPointContainer.getChildCount(); i++) {
-						ImageView childAt = (ImageView) mPointContainer.getChildAt(i);
-						if (i == arg0 % mPointContainer.getChildCount()) {
-							((GradientDrawable)childAt.getBackground()).setColor(mContext.getResources().getColor(mConfig.getIndicatorSelectedColor()));
-						} else {
-							((GradientDrawable)childAt.getBackground()).setColor(mContext.getResources().getColor(mConfig.getIndicatorNormalColor()));
+					if(mConfig.getmIndicatorType()== ConfigBuilder.IndicatorType.POINTS){
+						for (int i = 0; i < mPointContainer.getChildCount(); i++) {
+							ImageView childAt = (ImageView) mPointContainer.getChildAt(i);
+							if (i == arg0 % mPointContainer.getChildCount()) {
+								((GradientDrawable)childAt.getBackground()).setColor(mContext.getResources().getColor(mConfig.getIndicatorSelectedColor()));
+							} else {
+								((GradientDrawable)childAt.getBackground()).setColor(mContext.getResources().getColor(mConfig.getIndicatorNormalColor()));
+							}
+						}
+					}else{
+						if(mDatas !=null && mDatas.size()>position){
+							setCurrentPage(position);
 						}
 					}
+
 				}
 
 				if(mChangeListener!=null){
 					mChangeListener.onBannerPageChange(arg0);
 				}
 
-				int position = arg0 % mDatas.size();
+
 
 				if(mConfig.isShowTitle()){
 					if(mDatas !=null && mDatas.size()>position){

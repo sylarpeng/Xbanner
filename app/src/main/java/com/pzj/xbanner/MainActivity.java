@@ -17,7 +17,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 	private Xbanner xbanner;
 
-	private RadioGroup gp_auto_play,gp_loop_play,gp_show_txt,gp_show_indictor,gp_indictor_pos;
+	private RadioGroup gp_auto_play,gp_loop_play,gp_show_txt,gp_show_indictor,gp_indictor_pos,gp_indictor_type;
 	private SeekBar seek_delay_time;
 
 //	List<String> images = Arrays.asList("https://vpclub-img.oss-cn-shenzhen.aliyuncs.com/upload/100000058/201710/20/201710200949213515.jpg", "https://vpclub-img.oss-cn-shenzhen.aliyuncs.com/upload/100000058/201605/12/201605121644501497.jpg", "https://vpclub-img.oss-cn-shenzhen.aliyuncs.com/upload/100000058/201712/05/201712051441457849.jpg");
@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
 		gp_show_txt= (RadioGroup) findViewById(R.id.gp_show_txt);
 		gp_show_indictor= (RadioGroup) findViewById(R.id.gp_show_indictor);
 		gp_indictor_pos= (RadioGroup) findViewById(R.id.gp_indictor_pos);
+		gp_indictor_type= (RadioGroup) findViewById(R.id.gp_indictor_type);
 
 		seek_delay_time= (SeekBar) findViewById(R.id.seek_delay_time);
 
@@ -44,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
 		createCheckBoxListener(gp_show_txt);
 		createCheckBoxListener(gp_show_indictor);
 		createCheckBoxListener(gp_indictor_pos);
+		createCheckBoxListener(gp_indictor_type);
 
 		createSeekListener();
 
@@ -106,10 +108,12 @@ public class MainActivity extends AppCompatActivity {
 				.setIndicatorNormalColor(R.color.indictor_normal)
 				.setIndicatorSelectedColor(R.color.indictor_selected)
 				.setIndicatorGravity(gravity)
+				.setIndicatorBgHeight(100)
+				.setIndicatorType(gp_indictor_type.getCheckedRadioButtonId()==R.id.indictor_type_p?ConfigBuilder.IndicatorType.POINTS:ConfigBuilder.IndicatorType.DIGITAL)
 				.build();
 
 
-		xbanner.init(datas,TestEntity.class);
+//		xbanner.init(datas,TestEntity.class);
 
 		xbanner.init(datas,TestEntity.class,config);
 

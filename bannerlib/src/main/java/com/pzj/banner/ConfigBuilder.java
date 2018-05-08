@@ -50,9 +50,13 @@ public class ConfigBuilder {
 	private int mIndicatorNormalColor;
 
 	/**
-	 * 指示器背景颜色
+	 * 指示器背景颜色(点)
 	 */
 	private int mIndicatorBgColor;
+	/**
+	 * 指示器背景颜色（数字）
+	 */
+	private int mIndicatorDigitalBgColor;
 
 	private int mIndicatorBgHeight;
 
@@ -63,6 +67,11 @@ public class ConfigBuilder {
 	private IndicatorGravity mIndicatorGravity;
 
 	/**
+	 * 指示器显示样式（数字或者点）
+	 */
+	private IndicatorType mIndicatorType;
+
+	/**
 	 * 轮播间隔时间
 	 */
 	private int mDelayTime;
@@ -70,6 +79,12 @@ public class ConfigBuilder {
 
 	public enum IndicatorGravity {
 		LEFT,RIGHT,CENTER
+
+	}
+
+	//指示器显示（点,数字）
+	public enum IndicatorType {
+		POINTS,DIGITAL
 
 	}
 
@@ -83,7 +98,9 @@ public class ConfigBuilder {
 		this.mIndicatorNormalColor=builder.indicatorNormalColor;
 		this.mIndicatorSelectedColor=builder.indicatorSelectedColor;
 		this.mIndicatorBgColor=builder.indicatorBgColor;
+		this.mIndicatorDigitalBgColor=builder.indicatorDigitalBgColor;
 		this.mIndicatorGravity=builder.indicatorGravity;
+		this.mIndicatorType=builder.indicatorType;
 		this.mIndicatorBgHeight=builder.indicatorBgHeight;
 		this.mDelayTime=builder.delayTime;
 		this.mShowTitle=builder.showTitle;
@@ -99,8 +116,10 @@ public class ConfigBuilder {
 		private int indicatorNormalColor=R.color.indictor_normal;
 		private int indicatorSelectedColor=R.color.indictor_selected;
 		private int indicatorBgColor=R.color.bannerindicatorbgcolor;
+		private int indicatorDigitalBgColor=R.color.indictor_digital_bg;
 		private int indicatorBgHeight=65;
 		private IndicatorGravity indicatorGravity=IndicatorGravity.RIGHT;
+		private IndicatorType indicatorType=IndicatorType.POINTS;
 		private int delayTime=3000;
 
 		public  Builder setAutoPlay(boolean isAutoPlay){
@@ -143,6 +162,10 @@ public class ConfigBuilder {
 			this.indicatorGravity=gravity;
 			return this;
 		}
+		public Builder setIndicatorType(IndicatorType type){
+			this.indicatorType=type;
+			return this;
+		}
 		public Builder setIndicatorBgHeight(int indicatorHeight){
 			this.indicatorBgHeight=indicatorHeight;
 			return this;
@@ -155,6 +178,10 @@ public class ConfigBuilder {
 		}
 		public Builder setIndicatorBgColor(@ColorRes int color){
 			this.indicatorBgColor=color;
+			return this;
+		}
+		public Builder setIndicatorDigitalBgColor(@ColorRes int color){
+			this.indicatorDigitalBgColor=color;
 			return this;
 		}
 
@@ -198,8 +225,16 @@ public class ConfigBuilder {
 		return mIndicatorBgColor;
 	}
 
-	public IndicatorGravity getIndicatorGravity() {
+    public int getmIndicatorDigitalBgColor() {
+        return mIndicatorDigitalBgColor;
+    }
+
+    public IndicatorGravity getIndicatorGravity() {
 		return mIndicatorGravity;
+	}
+
+	public IndicatorType getmIndicatorType() {
+		return mIndicatorType;
 	}
 
 	public int getIndicatorBgHeight() {
