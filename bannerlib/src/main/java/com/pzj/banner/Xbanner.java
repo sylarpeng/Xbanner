@@ -191,14 +191,9 @@ public class Xbanner<T extends Object> extends RelativeLayout {
 				ImageView iiv = new ImageView(mContext);
 				LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
 						LinearLayout.LayoutParams.WRAP_CONTENT);
-				params.leftMargin = 10;
-				if (i == 0) {
-					iiv.setBackgroundResource(R.drawable.common_banner_point_selected);
-					((GradientDrawable)iiv.getBackground()).setColor(mContext.getResources().getColor(mConfig.getIndicatorSelectedColor()));
-				} else {
-					iiv.setBackgroundResource(R.drawable.common_banner_point_normal);
-					((GradientDrawable)iiv.getBackground()).setColor(mContext.getResources().getColor(mConfig.getIndicatorNormalColor()));
-				}
+				params.leftMargin = mConfig.getmIndicatorPointMargin();
+
+				setIndicatorPointStyle(iiv,i == 0);
 
 				mPointContainer.addView(iiv, params);
 			}
@@ -206,6 +201,18 @@ public class Xbanner<T extends Object> extends RelativeLayout {
 
 		mIndicatorContainer.addView(mPointContainer,lp);
 
+	}
+
+	private void setIndicatorPointStyle(ImageView iv,boolean isSelect){
+		if (isSelect) {
+			iv.setBackgroundResource(R.drawable.common_banner_point_selected);
+			((GradientDrawable)iv.getBackground()).setColor(mContext.getResources().getColor(mConfig.getIndicatorSelectedColor()));
+		} else {
+			iv.setBackgroundResource(R.drawable.common_banner_point_normal);
+			((GradientDrawable)iv.getBackground()).setColor(mContext.getResources().getColor(mConfig.getIndicatorNormalColor()));
+		}
+
+		((GradientDrawable)iv.getBackground()).setSize(mConfig.getmIndicatorPointRadius()*2,mConfig.getmIndicatorPointRadius()*2);
 	}
 
 
@@ -244,7 +251,7 @@ public class Xbanner<T extends Object> extends RelativeLayout {
 			iv.setScaleType(ImageView.ScaleType.FIT_XY);
 			// 添加到容器
 			container.addView(iv);
-			String imagePath = (String) entityAys.getValue(mDatas.get(position),ImagePath.class);
+			Object imagePath =entityAys.getValue(mDatas.get(position),ImagePath.class);
 			mImageLoader.displayImage(mContext,iv,imagePath);
 
 			return iv;
@@ -295,12 +302,16 @@ public class Xbanner<T extends Object> extends RelativeLayout {
 				int position = arg0 % mDatas.size();
 				if(mConfig.isShowIndicator()){
 					if(mConfig.getmIndicatorType()== ConfigBuilder.IndicatorType.POINTS){
-						for (int i = 0; i < mPointContainer.getChildCount(); i++) {
-							ImageView childAt = (ImageView) mPointContainer.getChildAt(i);
-							if (i == arg0 % mPointContainer.getChildCount()) {
-								((GradientDrawable)childAt.getBackground()).setColor(mContext.getResources().getColor(mConfig.getIndicatorSelectedColor()));
-							} else {
-								((GradientDrawable)childAt.getBackground()).setColor(mContext.getResources().getColor(mConfig.getIndicatorNormalColor()));
+						if(mPointContainer!=null){
+							for (int i = 0; i < mPointContainer.getChildCount(); i++) {
+								ImageView childAt = (ImageView) mPointContainer.getChildAt(i);
+								if (i == arg0 % mPointContainer.getChildCount()) {
+									setIndicatorPointStyle(childAt,true);
+//									((GradientDrawable)childAt.getBackground()).setColor(mContext.getResources().getColor(mConfig.getIndicatorSelectedColor()));
+								} else {
+//									((GradientDrawable)childAt.getBackground()).setColor(mContext.getResources().getColor(mConfig.getIndicatorNormalColor()));
+									setIndicatorPointStyle(childAt,false);
+								}
 							}
 						}
 					}else{
@@ -368,6 +379,9 @@ public class Xbanner<T extends Object> extends RelativeLayout {
 	private void reset(){
 		mIndicatorContainer.removeAllViews();
 		removeAllCallBack();
+		if(mTvIndicator!=null){
+		    this.removeView(mTvIndicator);
+        }
 	}
 	private void removeAllCallBack(){
 		handler.removeCallbacksAndMessages(null);
@@ -402,5 +416,10 @@ public class Xbanner<T extends Object> extends RelativeLayout {
 		if(mAdapter!=null){
 			mAdapter.notifyDataSetChanged();
 		}
+	}
+
+	public void setIndicatorContainerVisiable(boolean isVisiable){
+		mIndicatorContainer.setVisibility(isVisiable?View.VISIBLE:View.GONE);
+        mTvIndicator.setVisibility(isVisiable?View.VISIBLE:View.GONE);
 	}
 }

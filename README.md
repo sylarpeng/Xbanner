@@ -54,6 +54,9 @@
     				.setIndicatorNormalColor(R.color.indictor_normal)//指示器未选中颜色
     				.setIndicatorSelectedColor(R.color.indictor_selected)//指示器选中颜色
     				.setIndicatorGravity(gravity)//指示器显示位置,左中右
+    				.setIndicatorBgHeight(200)//指示器背景高度
+                    .setIndicatorPointMargin(40)//指示器(点)间距
+                    .setIndicatorPointRadius(15)//指示器(点)半径大小
     				.build();
 
     		xbanner.init(datas,TestEntity.class,config);

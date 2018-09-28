@@ -60,6 +60,10 @@ public class ConfigBuilder {
 
 	private int mIndicatorBgHeight;
 
+	private int mIndicatorPointMargin;
+
+	private int mIndicatorPointRadius;
+
 
 	/**
 	 * 指示器显示位置
@@ -102,6 +106,8 @@ public class ConfigBuilder {
 		this.mIndicatorGravity=builder.indicatorGravity;
 		this.mIndicatorType=builder.indicatorType;
 		this.mIndicatorBgHeight=builder.indicatorBgHeight;
+		this.mIndicatorPointMargin=builder.indicatorPointMargin;
+		this.mIndicatorPointRadius=builder.indicatorPointRadius;
 		this.mDelayTime=builder.delayTime;
 		this.mShowTitle=builder.showTitle;
 	}
@@ -118,6 +124,8 @@ public class ConfigBuilder {
 		private int indicatorBgColor=R.color.bannerindicatorbgcolor;
 		private int indicatorDigitalBgColor=R.color.indictor_digital_bg;
 		private int indicatorBgHeight=65;
+		private int indicatorPointMargin=10;
+		private int indicatorPointRadius=10;
 		private IndicatorGravity indicatorGravity=IndicatorGravity.RIGHT;
 		private IndicatorType indicatorType=IndicatorType.POINTS;
 		private int delayTime=3000;
@@ -168,6 +176,16 @@ public class ConfigBuilder {
 		}
 		public Builder setIndicatorBgHeight(int indicatorHeight){
 			this.indicatorBgHeight=indicatorHeight;
+			return this;
+		}
+
+		public Builder setIndicatorPointMargin(int indicatorPointMargin){
+			this.indicatorPointMargin=indicatorPointMargin;
+			return this;
+		}
+
+		public Builder setIndicatorPointRadius(int indicatorPointRadius){
+			this.indicatorPointRadius=indicatorPointRadius;
 			return this;
 		}
 		public Builder setDelayTime(int time){
@@ -241,7 +259,15 @@ public class ConfigBuilder {
 		return mIndicatorBgHeight;
 	}
 
-	public int getDelayTime() {
+	public int getmIndicatorPointMargin() {
+		return mIndicatorPointMargin;
+	}
+
+    public int getmIndicatorPointRadius() {
+        return mIndicatorPointRadius;
+    }
+
+    public int getDelayTime() {
 		return mDelayTime;
 	}
 

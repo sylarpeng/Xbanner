@@ -108,7 +108,9 @@ public class MainActivity extends AppCompatActivity {
 				.setIndicatorNormalColor(R.color.indictor_normal)
 				.setIndicatorSelectedColor(R.color.indictor_selected)
 				.setIndicatorGravity(gravity)
-				.setIndicatorBgHeight(100)
+				.setIndicatorBgHeight(200)
+				.setIndicatorPointMargin(40)
+				.setIndicatorPointRadius(15)
 				.setIndicatorType(gp_indictor_type.getCheckedRadioButtonId()==R.id.indictor_type_p?ConfigBuilder.IndicatorType.POINTS:ConfigBuilder.IndicatorType.DIGITAL)
 				.build();
 
@@ -116,7 +118,6 @@ public class MainActivity extends AppCompatActivity {
 //		xbanner.init(datas,TestEntity.class);
 
 		xbanner.init(datas,TestEntity.class,config);
-
 
 
 	}
