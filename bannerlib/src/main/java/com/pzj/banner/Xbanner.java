@@ -419,7 +419,12 @@ public class Xbanner<T extends Object> extends RelativeLayout {
 	}
 
 	public void setIndicatorContainerVisiable(boolean isVisiable){
-		mIndicatorContainer.setVisibility(isVisiable?View.VISIBLE:View.GONE);
-        mTvIndicator.setVisibility(isVisiable?View.VISIBLE:View.GONE);
+	    if(mIndicatorContainer!=null){
+            mIndicatorContainer.setVisibility(isVisiable?View.VISIBLE:View.GONE);
+        }
+		if(mTvIndicator!=null){
+            mTvIndicator.setVisibility(isVisiable?View.VISIBLE:View.GONE);
+        }
+
 	}
 }
