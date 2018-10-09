@@ -192,7 +192,7 @@ public class Xbanner<T extends Object> extends RelativeLayout {
 				LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
 						LinearLayout.LayoutParams.WRAP_CONTENT);
 				params.leftMargin = mConfig.getmIndicatorPointMargin();
-
+                params.rightMargin=i<mDatas.size()-1?0:mConfig.getmIndicatorPointMargin();
 				setIndicatorPointStyle(iiv,i == 0);
 
 				mPointContainer.addView(iiv, params);
