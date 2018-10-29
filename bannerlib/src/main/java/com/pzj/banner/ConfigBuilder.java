@@ -80,6 +80,11 @@ public class ConfigBuilder {
 	 */
 	private int mDelayTime;
 
+	/**
+	 * 是否RTL布局
+	 */
+	private boolean isRtl;
+
 
 	public enum IndicatorGravity {
 		LEFT,RIGHT,CENTER
@@ -110,6 +115,7 @@ public class ConfigBuilder {
 		this.mIndicatorPointRadius=builder.indicatorPointRadius;
 		this.mDelayTime=builder.delayTime;
 		this.mShowTitle=builder.showTitle;
+		this.isRtl=builder.isRtl;
 	}
 
 	public static class Builder{
@@ -129,6 +135,7 @@ public class ConfigBuilder {
 		private IndicatorGravity indicatorGravity=IndicatorGravity.RIGHT;
 		private IndicatorType indicatorType=IndicatorType.POINTS;
 		private int delayTime=3000;
+		private boolean isRtl=false;
 
 		public  Builder setAutoPlay(boolean isAutoPlay){
 			this.isAutoPlay=isAutoPlay;
@@ -203,7 +210,10 @@ public class ConfigBuilder {
 			return this;
 		}
 
-
+		public Builder  setRtl(boolean rtl) {
+			this.isRtl = rtl;
+			return this;
+		}
 
 		public ConfigBuilder build(){
 			return new ConfigBuilder(this);
@@ -271,7 +281,9 @@ public class ConfigBuilder {
 		return mDelayTime;
 	}
 
-
+	public boolean isRtl() {
+		return isRtl;
+	}
 
 	public boolean isShowTitle() {
 		return mShowTitle;

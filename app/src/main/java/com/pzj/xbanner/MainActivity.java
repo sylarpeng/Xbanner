@@ -3,16 +3,20 @@ package com.pzj.xbanner;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.RadioGroup;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.pzj.banner.ConfigBuilder;
+import com.pzj.banner.OnBannerClickListener;
 import com.pzj.banner.Xbanner;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 	private Xbanner xbanner;
@@ -52,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
 		datas.add(new TestEntity("http://img5.imgtn.bdimg.com/it/u=1245745137,1322364824&fm=27&gp=0.jpg","测试001"));
 		datas.add(new TestEntity("http://img3.imgtn.bdimg.com/it/u=3773737273,3162414253&fm=214&gp=0.jpg","测试002"));
 		datas.add(new TestEntity("http://a3.topitme.com/6/9a/f9/112653021665cf99a6l.jpg","测试003"));
+		datas.add(new TestEntity("https://uidesign.rglcdn.com/RG/images/APP/20170331/and_app.png","测试004"));
 
 		initBanner();
 
@@ -111,6 +116,7 @@ public class MainActivity extends AppCompatActivity {
 				.setIndicatorBgHeight(200)
 				.setIndicatorPointMargin(40)
 				.setIndicatorPointRadius(15)
+				.setRtl(isAr())
 				.setIndicatorType(gp_indictor_type.getCheckedRadioButtonId()==R.id.indictor_type_p?ConfigBuilder.IndicatorType.POINTS:ConfigBuilder.IndicatorType.DIGITAL)
 				.build();
 
@@ -118,7 +124,19 @@ public class MainActivity extends AppCompatActivity {
 //		xbanner.init(datas,TestEntity.class);
 
 		xbanner.init(datas,TestEntity.class,config);
+		xbanner.setOnBannerClickListener(new OnBannerClickListener() {
+			@Override
+			public void onBannerClick(int position) {
+				Log.d("main","click_"+datas.get(position).getTitle());
+			}
+		});
 
 
 	}
+
+	public static boolean isAr() {
+		return "ar".equals(Locale.getDefault().getLanguage().toLowerCase());
+	}
+
+
 }

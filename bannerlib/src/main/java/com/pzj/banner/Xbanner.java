@@ -13,11 +13,13 @@ import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.util.Collections;
 import java.util.List;
 
 
@@ -46,7 +48,6 @@ public class Xbanner<T extends Object> extends RelativeLayout {
 	private OnBannerChangeListener mChangeListener;
 	EntityAnalysis entityAys;
 
-
 	public Xbanner(Context context) {
 		this(context,null);
 	}
@@ -63,9 +64,8 @@ public class Xbanner<T extends Object> extends RelativeLayout {
 
 		mViewPager = new ViewPager(mContext);
 		mIndicatorContainer=new RelativeLayout(mContext);
-		this.addView(mViewPager);
+        this.addView(mViewPager);
 		this.addView(mIndicatorContainer);
-
 	}
 
 	private void initIndicatorContainer(){
@@ -87,9 +87,14 @@ public class Xbanner<T extends Object> extends RelativeLayout {
 		}
 
 		reset();
+
 		this.mDatas =datas;
 		if(config!=null){
 			mConfig=config;
+		}
+
+		if(mConfig.isRtl()){
+			Collections.reverse(mDatas);
 		}
 
 		initIndicatorContainer();
@@ -98,13 +103,12 @@ public class Xbanner<T extends Object> extends RelativeLayout {
 		mAdapter=new MyPagerAdapter();
 		mViewPager.setAdapter(mAdapter);
 
-		if(mConfig.isLoopPlay() && mDatas.size()>1){
-			mViewPager.setCurrentItem(mDatas.size()*10);
-		}
+		mViewPager.setCurrentItem(getDefaultIndicatorIndex());
 
 		//设置指示点
 		if(mConfig.isShowIndicator()){
-			if(mConfig.getmIndicatorType()== ConfigBuilder.IndicatorType.POINTS){
+			//RTL 暂只支持点指示器
+			if(mConfig.isRtl() || mConfig.getmIndicatorType()== ConfigBuilder.IndicatorType.POINTS){
 				addDian(mDatas);
 			}else{
 				addDigitalIndicator();
@@ -117,8 +121,21 @@ public class Xbanner<T extends Object> extends RelativeLayout {
 			addTitle();
 		}
 
-
 		initTouch();
+	}
+
+	private int getDefaultIndicatorIndex(){
+		int defaultIndex=0;
+		if(mConfig.isRtl()){
+			if(mDatas.size()>1){
+				defaultIndex=mDatas.size()*10000+(mDatas.size()-1);
+			}
+		}else{
+			if(mConfig.isLoopPlay() && mDatas.size()>1){
+				defaultIndex=mDatas.size()*10000;
+			}
+		}
+		return defaultIndex;
 	}
 
 	private void addTitle(){
@@ -132,7 +149,8 @@ public class Xbanner<T extends Object> extends RelativeLayout {
 		mTvDescription.setEllipsize(TextUtils.TruncateAt.END);
 		mTvDescription.setGravity(Gravity.CENTER_VERTICAL);
 		if(mDatas !=null && mDatas.size()>0){
-			String title = (String) entityAys.getValue(mDatas.get(0),Title.class);
+			int defaultSelectedIndex=mViewPager.getCurrentItem()%mDatas.size();
+			String title = (String) entityAys.getValue(mDatas.get(defaultSelectedIndex),Title.class);
 			mTvDescription.setText(title);
 		}
 		mIndicatorContainer.addView(mTvDescription,params);
@@ -167,13 +185,17 @@ public class Xbanner<T extends Object> extends RelativeLayout {
 	}
 
 	private void setCurrentPage(int currentPosition){
-		mTvIndicator.setText(currentPosition+1+"/"+mDatas.size());
+		if(mTvIndicator!=null){
+			mTvIndicator.setText(currentPosition+1+"/"+mDatas.size());
+		}
+
 	}
 
 	private void addDian(List<T> images){
 		mPointContainer = new LinearLayout(mContext);
 		mPointContainer.setId(R.id.banner_point_container);
 		mPointContainer.setGravity(Gravity.CENTER_VERTICAL);
+		mPointContainer.setLayoutDirection(LAYOUT_DIRECTION_LTR);
 		RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, mConfig.getIndicatorBgHeight());
 		lp.setMargins(30,0,30,0);
 		lp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
@@ -187,13 +209,15 @@ public class Xbanner<T extends Object> extends RelativeLayout {
 
 
 		if(images.size()>1){
+			int defaultSelectedIndex=mViewPager.getCurrentItem()%mDatas.size();
 			for (int i = 0; i < mDatas.size(); i++) {
 				ImageView iiv = new ImageView(mContext);
 				LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
 						LinearLayout.LayoutParams.WRAP_CONTENT);
-				params.leftMargin = mConfig.getmIndicatorPointMargin();
-                params.rightMargin=i<mDatas.size()-1?0:mConfig.getmIndicatorPointMargin();
-				setIndicatorPointStyle(iiv,i == 0);
+				params.setMarginStart(mConfig.getmIndicatorPointMargin());
+				params.setMarginEnd(i<mDatas.size()-1?0:mConfig.getmIndicatorPointMargin());
+
+				setIndicatorPointStyle(iiv,i==defaultSelectedIndex);
 
 				mPointContainer.addView(iiv, params);
 			}
@@ -296,20 +320,18 @@ public class Xbanner<T extends Object> extends RelativeLayout {
 				return false;
 			}
 		});
-		mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+		mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 			@Override
 			public void onPageSelected(int arg0) {
 				int position = arg0 % mDatas.size();
 				if(mConfig.isShowIndicator()){
-					if(mConfig.getmIndicatorType()== ConfigBuilder.IndicatorType.POINTS){
+					if(mConfig.isRtl() || mConfig.getmIndicatorType()== ConfigBuilder.IndicatorType.POINTS){
 						if(mPointContainer!=null){
 							for (int i = 0; i < mPointContainer.getChildCount(); i++) {
 								ImageView childAt = (ImageView) mPointContainer.getChildAt(i);
 								if (i == arg0 % mPointContainer.getChildCount()) {
 									setIndicatorPointStyle(childAt,true);
-//									((GradientDrawable)childAt.getBackground()).setColor(mContext.getResources().getColor(mConfig.getIndicatorSelectedColor()));
 								} else {
-//									((GradientDrawable)childAt.getBackground()).setColor(mContext.getResources().getColor(mConfig.getIndicatorNormalColor()));
 									setIndicatorPointStyle(childAt,false);
 								}
 							}
@@ -366,7 +388,7 @@ public class Xbanner<T extends Object> extends RelativeLayout {
 			switch (msg.what) {
 				case 1:
 					if(mDatas !=null && mDatas.size()>1){
-						mViewPager.setCurrentItem(mViewPager.getCurrentItem() + 1);
+						mViewPager.setCurrentItem(mViewPager.getCurrentItem() + (mConfig.isRtl()?-1:1));
 						sendEmptyMessageDelayed(1, mConfig.getDelayTime());
 					}
 					break;
