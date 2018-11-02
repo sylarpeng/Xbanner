@@ -295,12 +295,12 @@ public class Xbanner<T extends Object> extends RelativeLayout {
 				switch (event.getAction()) {
 					case MotionEvent.ACTION_DOWN:
 						currentPosition = mViewPager.getCurrentItem() % mDatas.size();
-						handler.removeCallbacksAndMessages(null);
+						removeAllCallBack();
 						downX = event.getX();
 						downY = event.getY();
 						break;
 					case MotionEvent.ACTION_UP:
-						handler.removeCallbacksAndMessages(null);
+						removeAllCallBack();
 						handler.sendEmptyMessageDelayed(1,mConfig.getDelayTime());
 						if (Math.abs(event.getX() - downX) < 5 && Math.abs(event.getY() - downY) < 5) {
 							if(mClickListener!=null){
@@ -309,10 +309,10 @@ public class Xbanner<T extends Object> extends RelativeLayout {
 						}
 						break;
 					case MotionEvent.ACTION_MOVE:
-						handler.removeCallbacksAndMessages(null);
+						removeAllCallBack();
 						break;
 					case MotionEvent.ACTION_CANCEL:
-						handler.removeCallbacksAndMessages(null);
+						removeAllCallBack();
 						handler.sendEmptyMessageDelayed(1,mConfig.getDelayTime());
 					default:
 						break;
@@ -431,6 +431,9 @@ public class Xbanner<T extends Object> extends RelativeLayout {
 	@Override
 	protected void onAttachedToWindow() {
 		super.onAttachedToWindow();
+		removeAllCallBack();
+		handler.sendEmptyMessageDelayed(1,mConfig.getDelayTime());
+
 
 	}
 
