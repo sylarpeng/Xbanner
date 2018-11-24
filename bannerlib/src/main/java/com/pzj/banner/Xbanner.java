@@ -8,10 +8,12 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -47,6 +49,7 @@ public class Xbanner<T extends Object> extends RelativeLayout {
 	private OnBannerClickListener mClickListener;
 	private OnBannerChangeListener mChangeListener;
 	EntityAnalysis entityAys;
+    int touchSlop =32;
 
 	public Xbanner(Context context) {
 		this(context,null);
@@ -55,6 +58,7 @@ public class Xbanner<T extends Object> extends RelativeLayout {
 	public Xbanner(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		this.mContext=context;
+        touchSlop = ViewConfiguration.get(mContext).getScaledTouchSlop()*2;
 		initView();
 	}
 
@@ -302,7 +306,10 @@ public class Xbanner<T extends Object> extends RelativeLayout {
 					case MotionEvent.ACTION_UP:
 						removeAllCallBack();
 						handler.sendEmptyMessageDelayed(1,mConfig.getDelayTime());
-						if (Math.abs(event.getX() - downX) < 5 && Math.abs(event.getY() - downY) < 5) {
+						float distinceX=Math.abs(event.getX() - downX);
+						float distinceY=Math.abs(event.getY() - downY);
+
+						if (distinceX <touchSlop && distinceY < touchSlop) {
 							if(mClickListener!=null){
 								mClickListener.onBannerClick(currentPosition);
 							}
